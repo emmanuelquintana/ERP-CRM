@@ -1,38 +1,43 @@
 -- Crear catálogos de estados
 CREATE TABLE estado_maquilador (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_usuario (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_inventario (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_orden_compra (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_orden_entrada (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_orden_salida (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
 
 CREATE TABLE estado_cotizacion (
-    id UUID PRIMARY KEY,
+    id bigInt PRIMARY KEY,
     descripcion VARCHAR NOT NULL
 );
+CREATE TABLE estado_cliente (
+	id int8 NOT NULL,
+	descripcion varchar NOT NULL
+);
+
 
 -- Crear tablas principales
 CREATE TABLE maquiladores (
@@ -40,7 +45,7 @@ CREATE TABLE maquiladores (
     nombre VARCHAR NOT NULL,
     direccion VARCHAR NOT NULL,
     capacidad INTEGER NOT NULL,
-    estado_id UUID REFERENCES estado_maquilador(id)
+    estado_id bigInt REFERENCES estado_maquilador(id)
 );
 
 CREATE TABLE clientes (
@@ -50,15 +55,17 @@ CREATE TABLE clientes (
     contacto VARCHAR NOT NULL,
     telefono VARCHAR NOT NULL,
     email VARCHAR NOT NULL
+    estado_id bigInt REFERENCES estado_usuario(id)
+
 );
 
 CREATE TABLE usuarios (
     id UUID PRIMARY KEY,
     nombre VARCHAR NOT NULL,
-    rol VARCHAR NOT NULL,
+    role VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
-    contraseña VARCHAR NOT NULL,
-    estado_id UUID REFERENCES estado_usuario(id)
+    password VARCHAR NOT NULL,
+    estado_id bigInt REFERENCES estado_usuario(id)
 );
 
 CREATE TABLE inventario (
@@ -67,28 +74,28 @@ CREATE TABLE inventario (
     cantidad INTEGER NOT NULL,
     ubicacion VARCHAR NOT NULL,
     codigo_barras VARCHAR NOT NULL,
-    estado_id UUID REFERENCES estado_inventario(id)
+    estado_id bigInt REFERENCES estado_inventario(id)
 );
 
 CREATE TABLE ordenes_compra (
     id UUID PRIMARY KEY,
     cliente_id UUID REFERENCES clientes(id),
     fecha DATE NOT NULL,
-    estado_id UUID REFERENCES estado_orden_compra(id)
+    estado_id bigInt REFERENCES estado_orden_compra(id)
 );
 
 CREATE TABLE ordenes_entrada (
     id UUID PRIMARY KEY,
     proveedor_id UUID REFERENCES maquiladores(id),
     fecha DATE NOT NULL,
-    estado_id UUID REFERENCES estado_orden_entrada(id)
+    estado_id bigInt REFERENCES estado_orden_entrada(id)
 );
 
 CREATE TABLE ordenes_salida (
     id UUID PRIMARY KEY,
     cliente_id UUID REFERENCES clientes(id),
     fecha DATE NOT NULL,
-    estado_id UUID REFERENCES estado_orden_salida(id)
+    estado_id bigInt REFERENCES estado_orden_salida(id)
 );
 
 CREATE TABLE cotizaciones (
@@ -97,7 +104,7 @@ CREATE TABLE cotizaciones (
     productos JSON NOT NULL,
     total DECIMAL NOT NULL,
     fecha DATE NOT NULL,
-    estado_id UUID REFERENCES estado_cotizacion(id)
+    estado_id bigInt REFERENCES estado_cotizacion(id)
 );
 
 -- Crear índices para mejorar el rendimiento
